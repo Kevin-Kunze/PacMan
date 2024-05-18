@@ -10,9 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Game extends JFrame {
-    private final Display display;
-    private final GameMap gameMap;
-    private final Player player;
+    private Display display;
+    private GameMap gameMap;
+    private Player player;
     private Menu menu;
     private final int tileSize;
     private boolean won;
@@ -22,18 +22,21 @@ public class Game extends JFrame {
 
         tileSize = Options.getTileSize();
 
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        menu = new Menu(this);
+        getContentPane().add(menu.getDisplay());
+
         display = new Display(this);
-        gameMap = new GameMap(tileSize);
         player = new Player(this, 13.5, 10.5, 0.375, Options.getPlayerSpeed());
         addKeyListener(player);
-        menu = new Menu(this);
-        getContentPane().add(menu.getPanel());
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        display.setFocusable(true);
+
+        gameMap = new GameMap(tileSize);
 
         int width = gameMap.getWidth() * (tileSize + 1) - 10;
         int height = gameMap.getHeight() * (tileSize + 1) + 14;
         setSize(width, height);
-        setResizable(true); //DEBUG: change to false afterwards
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -89,24 +92,4 @@ public class Game extends JFrame {
         return display;
     }
 
-    public static class Display extends JPanel {
-        private final Game game;
-
-        public Display(Game game) {
-            super();
-            this.game = game;
-            game.add(this);
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-            game.render(g2d);
-        }
-    }
 }
