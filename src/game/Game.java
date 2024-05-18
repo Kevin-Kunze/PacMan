@@ -22,14 +22,13 @@ public class Game extends JFrame {
 
         tileSize = Options.getTileSize();
 
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        /*getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         menu = new Menu(this);
-        getContentPane().add(menu.getDisplay());
+        getContentPane().add(menu.getDisplay());*/
 
         display = new Display(this);
         player = new Player(this, 13.5, 10.5, 0.375, Options.getPlayerSpeed());
         addKeyListener(player);
-        display.setFocusable(true);
 
         gameMap = new GameMap(tileSize);
 
@@ -40,6 +39,8 @@ public class Game extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+
+        startGameLoop();
     }
 
     public static void main(String[] args) {
@@ -53,15 +54,10 @@ public class Game extends JFrame {
     }
 
     public void startGameLoop() {
-        try {
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-                tick();
-                display.repaint();
-            }, 0L, 1000L / 60L, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, Language.getStrError());
-        }
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            tick();
+            display.repaint();
+        }, 0L, 1000L / 60L, TimeUnit.MILLISECONDS);
 
     }
 

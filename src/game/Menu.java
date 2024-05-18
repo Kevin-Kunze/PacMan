@@ -14,7 +14,6 @@ public class Menu {
 
     private void close() {
         display.setVisible(false);
-        display.remove(btnStartGame);
         game.startGameLoop();
     }
 
