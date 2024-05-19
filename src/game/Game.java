@@ -1,19 +1,18 @@
 package game;
 
-import game.data.Language;
 import game.data.Options;
 import game.objects.creatures.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Game extends JFrame {
     private Display display;
     private GameMap gameMap;
     private Player player;
     private Menu menu;
+    ScheduledFuture<?> gameThread;
     private final int tileSize;
     private boolean won;
 
@@ -22,13 +21,10 @@ public class Game extends JFrame {
 
         tileSize = Options.getTileSize();
 
-        /*getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         menu = new Menu(this);
-        getContentPane().add(menu.getDisplay());*/
 
         display = new Display(this);
         player = new Player(this, 13.5, 10.5, 0.375, Options.getPlayerSpeed());
-        addKeyListener(player);
 
         gameMap = new GameMap(tileSize);
 
@@ -38,9 +34,6 @@ public class Game extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
-
-        startGameLoop();
     }
 
     public static void main(String[] args) {
@@ -54,11 +47,14 @@ public class Game extends JFrame {
     }
 
     public void startGameLoop() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+        setVisible(true);
+
+        addKeyListener(player);
+
+        gameThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             tick();
             display.repaint();
         }, 0L, 1000L / 60L, TimeUnit.MILLISECONDS);
-
     }
 
     public void setWon(boolean won) {
@@ -67,7 +63,10 @@ public class Game extends JFrame {
 
     private void tick() {
         if (won) {
-            JOptionPane.showMessageDialog(null, "You Won!");
+            menu.setVisible(true);
+            setVisible(false);
+            removeKeyListener(player);
+            gameThread.cancel(true);
             reset();
         }
         player.tick();

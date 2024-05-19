@@ -56,7 +56,6 @@ public class Player extends Creature implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyChar());
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> {
                 preferredDirectionX = 0;
