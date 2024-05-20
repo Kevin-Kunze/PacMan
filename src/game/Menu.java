@@ -4,14 +4,14 @@ import javax.swing.*;
 
 public class Menu extends JFrame {
     private Game game;
-    private JButton btnStartGame;
+    private JButton buttonStartGame;
     private JPanel display;
 
-    public Menu(Game game) {
+    public Menu(Game game, int width, int height) {
         this.game = game;
-        btnStartGame.addActionListener(e -> close());
+        buttonStartGame.addActionListener(e -> close());
 
-        setSize(400, 300);
+        setSize(width, height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
