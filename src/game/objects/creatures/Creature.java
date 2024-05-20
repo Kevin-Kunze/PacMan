@@ -56,7 +56,11 @@ public abstract class Creature extends GameObject {
         centerX = newX;
         centerY = newY;
 
-        tickTurn(crossedCenterX, crossedCenterY);
+        if (crossedCenterX || crossedCenterY) {
+            tickPreferredDirection();
+            tickTurn(crossedCenterX, crossedCenterY);
+        }
+
         tickWallCollisions();
     }
 
@@ -71,6 +75,8 @@ public abstract class Creature extends GameObject {
         }
 
     }
+
+    protected abstract void tickPreferredDirection();
 
     private void tickTurn(boolean crossedCenterX, boolean crossedCenterY) {
         boolean turnXtoY = crossedCenterX && movingDirectionX != 0 && preferredDirectionY != 0
@@ -119,5 +125,13 @@ public abstract class Creature extends GameObject {
 
     public double getRadius() {
         return radius;
+    }
+
+    public int getMovingDirectionX() {
+        return movingDirectionX;
+    }
+
+    public int getMovingDirectionY() {
+        return movingDirectionY;
     }
 }

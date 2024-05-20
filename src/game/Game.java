@@ -2,6 +2,10 @@ package game;
 
 import game.data.Options;
 import game.objects.creatures.Player;
+import game.objects.creatures.enemy.ChasingEnemy;
+import game.objects.creatures.enemy.CuttingEnemy;
+import game.objects.creatures.enemy.Enemy;
+import game.objects.creatures.enemy.RandomEnemy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +14,11 @@ import java.util.TimerTask;
 import java.util.concurrent.*;
 
 public class Game extends JFrame {
-    private Display display;
-    private GameMap gameMap;
-    private Player player;
-    private Menu menu;
+    private final Display display;
+    private final GameMap gameMap;
+    private final Player player;
+    private final Menu menu;
+    private final Enemy[] enemies;
     Timer timer;
     ScheduledFuture<?> gameThread;
     private final int tileSize;
@@ -23,12 +28,16 @@ public class Game extends JFrame {
     public Game() {
         super("PacMan");
 
-        tileSize = Options.getTileSize();
+        tileSize = Options.TILE_SIZE;
 
         display = new Display(this);
-        player = new Player(this, 13.5, 10.5, 0.375, Options.getPlayerSpeed());
-
+        player = new Player(this, 13.5, 10.5, 0.375, Options.GAME_SPEED);
         gameMap = new GameMap(tileSize);
+        enemies = new Enemy[] {
+                new ChasingEnemy(this, player, 12.5, 8.5, 0.375, Options.GAME_SPEED * 0.85, Options.ENEMY_COLOR[0]),
+                new CuttingEnemy(this, player, 13.5, 8.5, 0.375, Options.GAME_SPEED * 0.85, Options.ENEMY_COLOR[1]),
+                new RandomEnemy(this, player, 14.5, 8.5, 0.375, Options.GAME_SPEED * 0.85, Options.ENEMY_COLOR[2])
+        };
 
         int width = gameMap.getWidth() * (tileSize + 1) - 10;
         int height = gameMap.getHeight() * (tileSize + 1) + 14;
@@ -48,6 +57,9 @@ public class Game extends JFrame {
         won = false;
         gameMap.reset();
         player.reset();
+        for (Enemy enemy: enemies) {
+            enemy.reset();
+        }
     }
 
     public void startGameLoop() {
@@ -71,46 +83,64 @@ public class Game extends JFrame {
             }
         };
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0L, 1000L);
+        timer.scheduleAtFixedRate(timerTask, 1000L, 1000L);
     }
 
     public void setWon(boolean won) {
         this.won = won;
     }
 
-    private void tick() {
-        if (won) {
-            menu.setVisible(true);
-            setVisible(false);
-            removeKeyListener(player);
-            timer.cancel();
-            gameThread.cancel(true);
-            reset();
-        }
-        player.tick();
+    public void loose() {
+        openMenu();
     }
 
-    public void render(Graphics2D g2d) {
-        g2d.setColor(Options.getBackgroundColor());
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        gameMap.render(g2d, tileSize);
-        player.render(g2d, tileSize);
+    private void openMenu() {
+        menu.setVisible(true);
+        setVisible(false);
+        removeKeyListener(player);
+        timer.cancel();
+        gameThread.cancel(true);
+        reset();
+    }
+
+    private void tick() {
+        if (won) {
+            openMenu();
+        }
+        player.tick();
+        for(Enemy enemy : enemies) {
+            enemy.tick();
+        }
+    }
+
+    public void render(Graphics2D g) {
+        g.setColor(Options.BACKGROUND_COLOR);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        gameMap.render(g, tileSize);
+        player.render(g, tileSize);
+        for (Enemy enemy : enemies) {
+            enemy.render(g, tileSize);
+        }
 
         //set font and color
-        g2d.setFont(new Font("DisplayFont", Font.BOLD, (int) (tileSize / 1.5)));
-        g2d.setColor(Color.WHITE);
+        g.setFont(new Font("DisplayFont", Font.BOLD, (int) (tileSize / 1.5)));
+        g.setColor(Color.WHITE);
 
         //display score
         int score = gameMap.getInitialDotCount() - gameMap.getDotCount();
-        g2d.drawString("Score: " + String.valueOf(score), (int) (tileSize / 5), tileSize / 3 + 14);
+        g.drawString("Score: " + String.valueOf(score), (int) (tileSize / 5), tileSize / 3 + 14);
 
         //display time
-        g2d.drawString("Time: " + String.valueOf(time), tileSize* (gameMap.getWidth() - 3), tileSize / 3 + 14);
+        g.drawString("Time: " + String.valueOf(time), tileSize* (gameMap.getWidth() - 3), tileSize / 3 + 14);
 
     }
 
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    public Enemy[] getEnemies() {
+        return enemies;
     }
 
     public Display getDisplay() {

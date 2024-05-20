@@ -11,7 +11,7 @@ public class Block extends Tile {
 
     @Override
     public void render(Graphics2D g, int tileSize) {
-        g.setColor(Options.getBlockColor());
+        g.setColor(Options.BLOCK_COLOR);
         g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
     }
 }

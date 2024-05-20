@@ -2,6 +2,7 @@ package game.objects.creatures;
 
 import game.Game;
 import game.data.Options;
+import game.objects.creatures.enemy.Enemy;
 import game.objects.tiles.Dot;
 
 import java.awt.*;
@@ -11,13 +12,20 @@ import java.awt.geom.Ellipse2D;
 
 public class Player extends Creature implements KeyListener {
     public Player(Game game, double centerX, double centerY, double radius, double speed) {
-        super(game, centerX, centerY, radius, speed, Options.getPlayerColor());
+        super(game, centerX, centerY, radius, speed, Options.PLAYER_COLOR);
     }
 
     @Override
     public  void tick() {
         super.tick();
         tickDotCollision();
+    }
+
+    @Override
+    protected void tickPreferredDirection() {
+        for(Enemy enemy : game.getEnemies()) {
+            enemy.tickPreferredDirection();
+        }
     }
 
     private void tickDotCollision() {

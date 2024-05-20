@@ -24,7 +24,7 @@ public class Dot extends Tile {
         double radiusOnScreen = radius * tileSize;
         double diameterOnScreen = radiusOnScreen * 2.0;
 
-        g.setColor(Options.getDotColor());
+        g.setColor(Options.DOT_COLOR);
         g.fill(new Ellipse2D.Double(centerXOnScreen - radiusOnScreen, centerYOnScreen - radiusOnScreen,
                 diameterOnScreen, diameterOnScreen));
     }
