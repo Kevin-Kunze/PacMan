@@ -32,7 +32,7 @@ public class Game extends JFrame {
 
         display = new Display(this);
         player = new Player(this, 13.5, 10.5, 0.375, Options.GAME_SPEED);
-        gameMap = new GameMap(tileSize);
+        gameMap = new GameMap();
         enemies = new Enemy[] {
                 new ChasingEnemy(this, player, 12.5, 8.5, 0.375, Options.GAME_SPEED * 0.85, Options.ENEMY_COLOR[0]),
                 new CuttingEnemy(this, player, 13.5, 8.5, 0.375, Options.GAME_SPEED * 0.85, Options.ENEMY_COLOR[1]),
@@ -95,7 +95,7 @@ public class Game extends JFrame {
     }
 
     private void openMenu() {
-        menu.setVisible(true);
+        menu.open(won, gameMap.getScore(), time);
         setVisible(false);
         removeKeyListener(player);
         timer.cancel();
@@ -127,11 +127,10 @@ public class Game extends JFrame {
         g.setColor(Color.WHITE);
 
         //display score
-        int score = gameMap.getInitialDotCount() - gameMap.getDotCount();
-        g.drawString("Score: " + String.valueOf(score), (int) (tileSize / 5), tileSize / 3 + 14);
+        g.drawString("Score: " + gameMap.getScore(), tileSize / 5, tileSize / 3 + 14);
 
         //display time
-        g.drawString("Time: " + String.valueOf(time), tileSize* (gameMap.getWidth() - 3), tileSize / 3 + 14);
+        g.drawString("Time: " + time, tileSize* (gameMap.getWidth() - 3), tileSize / 3 + 14);
 
     }
 
@@ -142,13 +141,4 @@ public class Game extends JFrame {
     public Enemy[] getEnemies() {
         return enemies;
     }
-
-    public Display getDisplay() {
-        return display;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
 }

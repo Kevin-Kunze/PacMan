@@ -7,8 +7,6 @@ import game.objects.tiles.Dot;
 import game.objects.tiles.Tile;
 
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameMap extends GameObject {
     private static final int[][] DEFAULT_MAP = {
@@ -33,12 +31,10 @@ public class GameMap extends GameObject {
     };
 
     private final Tile[][] tiles;
-    private final int tileSize;
     private int initialDotCount;
     private int dotCount;
 
-    public GameMap(int tileSize) {
-        this.tileSize = tileSize;
+    public GameMap() {
         tiles = new Tile[DEFAULT_MAP.length][DEFAULT_MAP[0].length];
         reset();
     }
@@ -89,10 +85,6 @@ public class GameMap extends GameObject {
         return tiles.length;
     }
 
-    public int getTileSize() {
-        return tileSize;
-    }
-
     public Tile getTile(int x, int y) {
         return tiles[y][x];
     }
@@ -104,11 +96,11 @@ public class GameMap extends GameObject {
         }
     }
 
-    public int getInitialDotCount() {
-        return initialDotCount;
-    }
-
     public int getDotCount() {
         return dotCount;
+    }
+
+    public int getScore() {
+        return initialDotCount - dotCount;
     }
 }
