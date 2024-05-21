@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class RandomEnemy extends Enemy{
-    private Random random;
+    private final Random random;
 
     public RandomEnemy(Game game, Player player, double centerX, double centerY, double radius, double speed, Color color) {
         super(game, player, centerX, centerY, radius, speed, color);
