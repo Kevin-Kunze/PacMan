@@ -16,7 +16,7 @@ public class Language {
     private static final String[] time = new String[]{"Time", "Zeit"};
     private static final String[] name = new String[]{"Name", "Name"};
     private static final String[] clearScoreList = new String[]{"Clear Scoreboard", "Rangliste löschen"};
-    private static final String[] noPlayerName = new String[]{"Player has no name.", "Spieler hat keinen Namen."};
+    private static final String[] invalidPlayerName = new String[]{"Player name is invalid.", "Spielername ist ungültig."};
 
     public static String getError(int language) {
         if (language < 0 || language >= COUNT) return error[0];
@@ -73,9 +73,9 @@ public class Language {
         return clearScoreList[language];
     }
 
-    public static String getNoPlayerName(int language) {
-        if (language < 0 || language >= COUNT) return noPlayerName[0];
-        return noPlayerName[language];
+    public static String getInvalidPlayerName(int language) {
+        if (language < 0 || language >= COUNT) return invalidPlayerName[0];
+        return invalidPlayerName[language];
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Language {
                 ", score=" + Arrays.toString(score) +
                 ", time=" + Arrays.toString(time) +
                 ", name=" + Arrays.toString(name) +
-                ", noPlayerName=" + Arrays.toString(noPlayerName) +
+                ", noPlayerName=" + Arrays.toString(invalidPlayerName) +
                 '}';
     }
 }

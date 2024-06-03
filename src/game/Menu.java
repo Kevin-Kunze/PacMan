@@ -41,7 +41,7 @@ public class Menu extends JFrame {
         Font fontTitle = new Font("Title", Font.BOLD, 30);
         labelTitle.setText(Language.getTitle());
         labelTitle.setFont(fontTitle);
-        buttonStartGame.addActionListener(_ -> close());
+        buttonStartGame.addActionListener(_ -> startGame());
         buttonLanguage.addActionListener(_ -> switchLanguage());
         buttonClearScoreList.addActionListener(_ -> clearScoreList());
 
@@ -93,10 +93,13 @@ public class Menu extends JFrame {
         setLabelScoreList();
     }
 
-    private void close() {
-        if(textFieldName.getText().isEmpty()) {
+    private void startGame() {
+        if(textFieldName.getText().isEmpty()
+                || textFieldName.getText().contains("\"")
+                || textFieldName.getText().contains("<")
+                || textFieldName.getText().contains(">")) {
             JOptionPane.showMessageDialog(this, Language.getError(language) + "\n"
-                    + Language.getNoPlayerName(language));
+                    + Language.getInvalidPlayerName(language));
             return;
         }
         setVisible(false);
