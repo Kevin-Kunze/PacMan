@@ -1,5 +1,6 @@
 package game;
 
+import game.data.Language;
 import game.data.Options;
 import game.objects.creatures.Player;
 import game.objects.creatures.enemy.ChasingEnemy;
@@ -9,8 +10,10 @@ import game.objects.creatures.enemy.RandomEnemy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.*;
 
 public class Game extends JFrame {
@@ -41,12 +44,20 @@ public class Game extends JFrame {
 
         int width = gameMap.getWidth() * (tileSize + 1) - 10;
         int height = gameMap.getHeight() * (tileSize + 1) + 14;
+        menu = new Menu(this, width, height);
+
         setSize(width, height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        menu = new Menu(this, width, height);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                menu.saveScoreList();
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -91,26 +102,25 @@ public class Game extends JFrame {
     }
 
     public void loose() {
-        openMenu();
+        wrapGame();
     }
 
-    private void openMenu() {
-        menu.open(won, gameMap.getScore(), time);
+    private void tick() {
+        if (won) wrapGame();
+        if (time >= 999) loose();
+        player.tick();
+        for(Enemy enemy : enemies) {
+            enemy.tick();
+        }
+    }
+
+    private void wrapGame() {
+        menu.open(won);
         setVisible(false);
         removeKeyListener(player);
         timer.cancel();
         gameThread.cancel(true);
         reset();
-    }
-
-    private void tick() {
-        if (won) {
-            openMenu();
-        }
-        player.tick();
-        for(Enemy enemy : enemies) {
-            enemy.tick();
-        }
     }
 
     public void render(Graphics2D g) {
@@ -127,10 +137,10 @@ public class Game extends JFrame {
         g.setColor(Color.WHITE);
 
         //display score
-        g.drawString("Score: " + gameMap.getScore(), tileSize / 5, tileSize / 3 + 14);
+        g.drawString(Language.getScore(menu.getLanguage()) + ": " + gameMap.getScore(), tileSize / 5, tileSize / 3 + 14);
 
         //display time
-        g.drawString("Time: " + time, tileSize* (gameMap.getWidth() - 3), tileSize / 3 + 14);
+        g.drawString(Language.getTime(menu.getLanguage()) + ": " + time, tileSize * (gameMap.getWidth() - 3) - 10, tileSize / 3 + 14);
 
     }
 
@@ -140,5 +150,9 @@ public class Game extends JFrame {
 
     public Enemy[] getEnemies() {
         return enemies;
+    }
+
+    public int getTime() {
+        return time;
     }
 }
