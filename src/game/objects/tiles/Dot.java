@@ -1,6 +1,6 @@
 package game.objects.tiles;
 
-import game.data.Options;
+import game.data.Option;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -24,7 +24,7 @@ public class Dot extends Tile {
         double radiusOnScreen = radius * tileSize;
         double diameterOnScreen = radiusOnScreen * 2.0;
 
-        g.setColor(Options.DOT_COLOR);
+        g.setColor(Option.DOT_COLOR);
         g.fill(new Ellipse2D.Double(centerXOnScreen - radiusOnScreen, centerYOnScreen - radiusOnScreen,
                 diameterOnScreen, diameterOnScreen));
     }
@@ -39,5 +39,14 @@ public class Dot extends Tile {
 
     public double getRadius() {
         return radius;
+    }
+
+    @Override
+    public String toString() {
+        return "Dot{" +
+                "radius=" + radius +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

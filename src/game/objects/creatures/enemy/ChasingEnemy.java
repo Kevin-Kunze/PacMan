@@ -15,4 +15,32 @@ public class ChasingEnemy extends Enemy {
         targetX = (int) player.getCenterX();
         targetY = (int) player.getCenterY();
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ChasingEnemy{" +
+                "player=" + player +
+                ", targetX=" + targetX +
+                ", targetY=" + targetY +
+                ", centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", color=" + color +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                '}';
+    }
 }

@@ -28,4 +28,32 @@ public class CuttingEnemy extends Enemy {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "CuttingEnemy{" +
+                "player=" + player +
+                ", targetX=" + targetX +
+                ", targetY=" + targetY +
+                ", centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", color=" + color +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                '}';
+    }
 }

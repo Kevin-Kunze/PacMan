@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import game.data.Language;
-import game.data.Options;
+import game.data.Option;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Menu extends JFrame {
     private final Game game;
@@ -66,9 +67,8 @@ public class Menu extends JFrame {
 
     public void loadScoreList() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonReader jsonReader;
         try {
-            jsonReader = new JsonReader(new FileReader(Options.FILE_PATH));
+            JsonReader jsonReader = new JsonReader(new FileReader(Option.FILE_PATH));
             scoreList = gson.fromJson(jsonReader, ScoreList.class);
         } catch (FileNotFoundException e) {
             scoreList = new ScoreList();
@@ -78,7 +78,7 @@ public class Menu extends JFrame {
     public void saveScoreList() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
-            FileWriter fileWriter = new FileWriter(Options.FILE_PATH);
+            FileWriter fileWriter = new FileWriter(Option.FILE_PATH);
             gson.toJson(scoreList, fileWriter);
             fileWriter.flush();
             fileWriter.close();
@@ -122,10 +122,10 @@ public class Menu extends JFrame {
     private void setPlayAgainText() {
         if (won) {
             labelTitle.setText(Language.getWon(language));
-            labelTitle.setForeground(Options.WON_COLOR);
+            labelTitle.setForeground(Option.WON_COLOR);
         } else {
             labelTitle.setText(Language.getLost(language));
-            labelTitle.setForeground(Options.LOST_COLOR);
+            labelTitle.setForeground(Option.LOST_COLOR);
         }
         labelScoreTime.setText(Language.getScore(language) + ": " + game.getGameMap().getScore() + " "
                 + Language.getTime(language) + ": " + game.getTime());
@@ -153,5 +153,44 @@ public class Menu extends JFrame {
 
     public int getLanguage() {
         return language;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Menu menu = (Menu) object;
+        return language == menu.language && againScreen == menu.againScreen && won == menu.won
+                && Objects.equals(buttonStartGame.getText(), menu.buttonStartGame.getText())
+                && Objects.equals(labelTitle.getText(), menu.labelTitle.getText())
+                && Objects.equals(buttonLanguage.getText(), menu.buttonLanguage.getText())
+                && Objects.equals(labelScoreList.getText(), menu.labelScoreList.getText())
+                && Objects.equals(textFieldName.getText(), menu.textFieldName.getText())
+                && Objects.equals(buttonClearScoreList.getText(), menu.buttonClearScoreList.getText())
+                && Objects.equals(labelScoreTime.getText(), menu.labelScoreTime.getText())
+                && Objects.equals(scoreList, menu.scoreList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(buttonStartGame, display, labelTitle, buttonLanguage, labelScoreList, textFieldName, buttonClearScoreList, labelScoreTime, scoreList, language, againScreen, won);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "buttonStartGame=" + buttonStartGame +
+                ", display=" + display +
+                ", labelTitle=" + labelTitle +
+                ", buttonLanguage=" + buttonLanguage +
+                ", labelScoreList=" + labelScoreList +
+                ", textFieldName=" + textFieldName +
+                ", buttonClearScoreList=" + buttonClearScoreList +
+                ", labelScoreTime=" + labelScoreTime +
+                ", scoreList=" + scoreList +
+                ", language=" + language +
+                ", againScreen=" + againScreen +
+                ", won=" + won +
+                '}';
     }
 }

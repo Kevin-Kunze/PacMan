@@ -1,7 +1,7 @@
 package game.objects.creatures;
 
 import game.Game;
-import game.data.Options;
+import game.data.Option;
 import game.objects.creatures.enemy.Enemy;
 import game.objects.tiles.Dot;
 
@@ -12,7 +12,7 @@ import java.awt.geom.Ellipse2D;
 
 public class Player extends Creature implements KeyListener {
     public Player(Game game, double centerX, double centerY, double radius, double speed) {
-        super(game, centerX, centerY, radius, speed, Options.PLAYER_COLOR);
+        super(game, centerX, centerY, radius, speed, Option.PLAYER_COLOR);
     }
 
     @Override
@@ -87,5 +87,20 @@ public class Player extends Creature implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         //ignore
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", color=" + color +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                '}';
     }
 }

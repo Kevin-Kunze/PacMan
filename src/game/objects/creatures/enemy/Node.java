@@ -70,4 +70,15 @@ public class Node implements Comparable<Node>{
     public int getY() {
         return y;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "distanceFromStart=" + distanceFromStart +
+                ", x=" + x +
+                ", y=" + y +
+                ", previous=" + previous +
+                ", minDistanceToGoal=" + minDistanceToGoal +
+                '}';
+    }
 }

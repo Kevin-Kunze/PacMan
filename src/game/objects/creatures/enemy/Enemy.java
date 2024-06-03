@@ -6,13 +6,10 @@ import game.objects.creatures.Player;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Enemy extends Creature {
-    protected Player player;
+    protected final Player player;
     protected int targetX;
     protected int targetY;
 
@@ -81,5 +78,38 @@ public abstract class Enemy extends Creature {
 
         g.setColor(color);
         g.fill(new Rectangle2D.Double(centerXOnScreen - radiusOnScreen, centerYOnScreen - radiusOnScreen, sizeOnScreen, sizeOnScreen));
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        Enemy enemy = (Enemy) object;
+        return targetX == enemy.targetX && targetY == enemy.targetY
+                && Objects.equals(player, enemy.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player, targetX, targetY);
+    }
+
+    @Override
+    public String toString() {
+        return "Enemy{" +
+                "player=" + player +
+                ", targetX=" + targetX +
+                ", targetY=" + targetY +
+                ", centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", color=" + color +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                '}';
     }
 }

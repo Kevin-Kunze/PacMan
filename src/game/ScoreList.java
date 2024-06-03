@@ -1,9 +1,11 @@
 package game;
 
-import game.data.Options;
+import game.data.Option;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
 
 public class ScoreList extends ArrayList<ScoreList.Score> {
     public ScoreList() {
@@ -13,33 +15,41 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
     public void add(String name, int value, int time) {
         super.add(new Score(name, value, time));
         sort(new ScoreComparator());
-        if (size() > Options.MAX_SCORE_LIST) {
-            for (int i = Options.MAX_SCORE_LIST - 1; i < size(); i++) {
+        if (size() > Option.MAX_SCORE_LIST) {
+            for (int i = Option.MAX_SCORE_LIST - 1; i < size(); i++) {
                 remove(i);
             }
         }
     }
 
     public String getAsString(String languageName, String languageScore, String languageTime) {
-        StringBuilder stringBuilder = new StringBuilder("<html><table>");
-        stringBuilder.append("<tr><th><h3>");
-        stringBuilder.append(languageName);
-        stringBuilder.append("</h3></th><th><h3>");
-        stringBuilder.append(languageScore);
-        stringBuilder.append("</h3></th><th><h3>");
-        stringBuilder.append(languageTime);
-        stringBuilder.append("</h3></th></tr>");
+        StringBuilder stringBuilder = new StringBuilder("<html><table><tr><th><h3>");
+        stringBuilder.append(languageName).append("</h3></th><th><h3>");
+        stringBuilder.append(languageScore).append("</h3></th><th><h3>");
+        stringBuilder.append(languageTime).append("</h3></th></tr>");
         for (Score score : this) {
             stringBuilder.append("<tr><th>");
-            stringBuilder.append(score.name);
-            stringBuilder.append("</th><th>");
-            stringBuilder.append(score.value);
-            stringBuilder.append("</th><th>");
-            stringBuilder.append(score.time);
-            stringBuilder.append("</th></tr>");
+            stringBuilder.append(score.name).append("</th><th>");
+            stringBuilder.append(score.value).append("</th><th>");
+            stringBuilder.append(score.time).append("</th></tr>");
         }
-        stringBuilder.append("</table></html>");
-        return stringBuilder.toString();
+        return stringBuilder.append("</table></html>").toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("ScoreList{[");
+        Iterator<Score> iterator = iterator();
+        while(iterator.hasNext()) {
+            stringBuilder.append(iterator.next());
+            if(iterator.hasNext()) stringBuilder.append(", ");
+        }
+        return stringBuilder.append("]}").toString();
     }
 
     public static class Score {
@@ -51,6 +61,28 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
             this.name = name;
             this.value = value;
             this.time = time;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (object == null || getClass() != object.getClass()) return false;
+            Score score = (Score) object;
+            return value == score.value && time == score.time && Objects.equals(name, score.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, value, time);
+        }
+
+        @Override
+        public String toString() {
+            return "Score{" +
+                    "name='" + name + '\'' +
+                    ", value=" + value +
+                    ", time=" + time +
+                    '}';
         }
     }
 

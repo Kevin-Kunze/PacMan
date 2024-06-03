@@ -1,6 +1,6 @@
 package game.objects.tiles;
 
-import game.data.Options;
+import game.data.Option;
 
 import java.awt.*;
 
@@ -11,7 +11,15 @@ public class Block extends Tile {
 
     @Override
     public void render(Graphics2D g, int tileSize) {
-        g.setColor(Options.BLOCK_COLOR);
+        g.setColor(Option.BLOCK_COLOR);
         g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    }
+
+    @Override
+    public String toString() {
+        return "Block{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

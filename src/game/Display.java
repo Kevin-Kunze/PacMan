@@ -22,4 +22,9 @@ public class Display extends JPanel {
 
         game.render(g2d);
     }
+
+    @Override
+    public String toString() {
+        return "Display{}";
+    }
 }

@@ -5,6 +5,7 @@ import game.GameMap;
 import game.objects.GameObject;
 
 import java.awt.*;
+import java.util.Objects;
 
 public abstract class Creature extends GameObject {
     public Creature(Game game, double centerX, double centerY, double radius, double speed, Color color) {
@@ -24,7 +25,7 @@ public abstract class Creature extends GameObject {
     protected double centerY;
     protected final double radius;
     protected final double speed;
-    protected Color color;
+    protected final Color color;
 
     protected int preferredDirectionX;
     protected int preferredDirectionY;
@@ -133,5 +134,42 @@ public abstract class Creature extends GameObject {
 
     public int getMovingDirectionY() {
         return movingDirectionY;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Creature creature = (Creature) object;
+        return Double.compare(centerX, creature.centerX) == 0 && Double.compare(centerY, creature.centerY) == 0
+                && Double.compare(radius, creature.radius) == 0 && Double.compare(speed, creature.speed) == 0
+                && preferredDirectionX == creature.preferredDirectionX
+                && preferredDirectionY == creature.preferredDirectionY
+                && movingDirectionX == creature.movingDirectionX && movingDirectionY == creature.movingDirectionY
+                && Double.compare(initialX, creature.initialX) == 0
+                && Double.compare(initialY, creature.initialY) == 0
+                && Objects.equals(color, creature.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(centerX, centerY, radius, speed, color, preferredDirectionX, preferredDirectionY, movingDirectionX, movingDirectionY, initialX, initialY);
+    }
+
+    @Override
+    public String toString() {
+        return "Creature{" +
+                "centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                ", color=" + color +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", initialX=" + initialX +
+                ", initialY=" + initialY +
+                '}';
     }
 }

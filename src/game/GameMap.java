@@ -7,6 +7,8 @@ import game.objects.tiles.Dot;
 import game.objects.tiles.Tile;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class GameMap extends GameObject {
     private static final int[][] DEFAULT_MAP = {
@@ -102,5 +104,28 @@ public class GameMap extends GameObject {
 
     public int getScore() {
         return initialDotCount - dotCount;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        GameMap gameMap = (GameMap) object;
+        return initialDotCount == gameMap.initialDotCount && dotCount == gameMap.dotCount
+                && Arrays.deepEquals(tiles, gameMap.tiles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.deepHashCode(tiles), initialDotCount, dotCount);
+    }
+
+    @Override
+    public String toString() {
+        return "GameMap{" +
+                "tiles=" + Arrays.deepToString(tiles) +
+                ", initialDotCount=" + initialDotCount +
+                ", dotCount=" + dotCount +
+                '}';
     }
 }

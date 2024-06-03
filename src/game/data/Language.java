@@ -1,7 +1,9 @@
 package game.data;
 
+import java.util.Arrays;
+
 public class Language {
-    public static int COUNT = 2;
+    public static final int COUNT = 2;
 
     private static final String title = "PacMan";
     private static final String[] error = new String[]{"Error!", "Fehler!"};
@@ -74,5 +76,24 @@ public class Language {
     public static String getNoPlayerName(int language) {
         if (language < 0 || language >= COUNT) return noPlayerName[0];
         return noPlayerName[language];
+    }
+
+    @Override
+    public String toString() {
+        return "Language{" +
+                "clearScoreList=" + Arrays.toString(clearScoreList) +
+                ", COUNT=" + COUNT +
+                ", title='" + title + '\'' +
+                ", error=" + Arrays.toString(error) +
+                ", languageName=" + Arrays.toString(languageName) +
+                ", play=" + Arrays.toString(play) +
+                ", playAgain=" + Arrays.toString(playAgain) +
+                ", won=" + Arrays.toString(won) +
+                ", lost=" + Arrays.toString(lost) +
+                ", score=" + Arrays.toString(score) +
+                ", time=" + Arrays.toString(time) +
+                ", name=" + Arrays.toString(name) +
+                ", noPlayerName=" + Arrays.toString(noPlayerName) +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import game.Game;
 import game.objects.creatures.Player;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
 
 public class RandomEnemy extends Enemy{
@@ -27,5 +28,35 @@ public class RandomEnemy extends Enemy{
             targetX = nextTargetX;
             targetY = nextTargetY;
         }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode());
+    }
+
+    @Override
+    public String toString() {
+        return "RandomEnemy{" +
+                "player=" + player +
+                ", targetX=" + targetX +
+                ", targetY=" + targetY +
+                ", centerX=" + centerX +
+                ", centerY=" + centerY +
+                ", color=" + color +
+                ", movingDirectionX=" + movingDirectionX +
+                ", movingDirectionY=" + movingDirectionY +
+                ", preferredDirectionX=" + preferredDirectionX +
+                ", preferredDirectionY=" + preferredDirectionY +
+                ", radius=" + radius +
+                ", speed=" + speed +
+                '}';
     }
 }
