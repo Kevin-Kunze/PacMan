@@ -52,11 +52,6 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
             this.value = value;
             this.time = time;
         }
-
-        @Override
-        public String toString() {
-            return name + ", " + value + ", " + time;
-        }
     }
 
     public static class ScoreComparator implements Comparator<Score> {
