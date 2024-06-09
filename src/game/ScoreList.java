@@ -1,27 +1,47 @@
 package game;
 
-import game.data.Option;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
 public class ScoreList extends ArrayList<ScoreList.Score> {
+    public static final int MAX = 12;
+
     public ScoreList() {
         super();
     }
 
+    /**
+     * add a new Score to ScoreList,
+     * sort,
+     * trim down to 12 elements
+     * @param name name of Score
+     * @param value value of Score
+     * @param time time of Score
+     */
     public void add(String name, int value, int time) {
         super.add(new Score(name, value, time));
-        sort(new ScoreComparator());
-        if (size() > Option.MAX_SCORE_LIST) {
-            for (int i = Option.MAX_SCORE_LIST - 1; i < size(); i++) {
+        sort();
+
+        //remove the lowest score when size is over MAX_SCORE_LIST
+        if (size() > MAX) {
+            for (int i = MAX - 1; i < size(); i++) {
                 remove(i);
             }
         }
     }
 
+    public void sort() {
+        super.sort(new ScoreComparator());
+    }
+
+    /**
+     * @param languageName translation of name
+     * @param languageScore translation of score
+     * @param languageTime translation of time
+     * @return HTML string containing all elements
+     */
     public String getAsString(String languageName, String languageScore, String languageTime) {
         StringBuilder stringBuilder = new StringBuilder("<html><table><tr><th><h3>");
         stringBuilder.append(languageName).append("</h3></th><th><h3>");
@@ -37,11 +57,6 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("ScoreList{[");
         Iterator<Score> iterator = iterator();
@@ -52,6 +67,9 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
         return stringBuilder.append("]}").toString();
     }
 
+    /**
+     * used to save values regarding player score
+     */
     public static class Score {
         private final String name;
         private final int value;
@@ -86,6 +104,11 @@ public class ScoreList extends ArrayList<ScoreList.Score> {
         }
     }
 
+    /**
+     * compare score:
+     * value descending,
+     * time ascending
+     */
     public static class ScoreComparator implements Comparator<Score> {
 
         @Override

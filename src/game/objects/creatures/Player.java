@@ -15,12 +15,18 @@ public class Player extends Creature implements KeyListener {
         super(game, centerX, centerY, radius, speed, Option.PLAYER_COLOR);
     }
 
+    /**
+     * calculations on tick
+     */
     @Override
     public  void tick() {
         super.tick();
         tickDotCollision();
     }
 
+    /**
+     * update target for enemies
+     */
     @Override
     protected void tickPreferredDirection() {
         for(Enemy enemy : game.getEnemies()) {
@@ -28,6 +34,9 @@ public class Player extends Creature implements KeyListener {
         }
     }
 
+    /**
+     * checks if player picked up dot
+     */
     private void tickDotCollision() {
         int x = (int) centerX;
         int y = (int) centerY;
@@ -37,6 +46,7 @@ public class Player extends Creature implements KeyListener {
             double dy = dot.getCenterY() - centerY;
             double r = dot.getRadius() + radius;
 
+            //if player collides with dot
             if(dx * dx + dy * dy < r * r) {
                 game.getGameMap().removeDot(x, y);
                 if (game.getGameMap().getDotCount() == 0) {
@@ -46,15 +56,20 @@ public class Player extends Creature implements KeyListener {
         }
     }
 
+    /**
+     * render circle with set color
+     * @param g the Graphics context in which to render
+     */
     @Override
-    public void render(Graphics2D g, int tileSize) {
-        double centerXOnScreen = centerX * tileSize;
-        double centerYOnScreen = centerY * tileSize;
-        double radiusOnScreen = radius * tileSize;
+    public void render(Graphics2D g) {
+        double centerXOnScreen = centerX * Option.TILE_SIZE;
+        double centerYOnScreen = centerY * Option.TILE_SIZE;
+        double radiusOnScreen = radius * Option.TILE_SIZE;
         double diameterOnScreen = radiusOnScreen * 2;
 
         g.setColor(color);
-        g.fill(new Ellipse2D.Double(centerXOnScreen - radiusOnScreen, centerYOnScreen - radiusOnScreen, diameterOnScreen, diameterOnScreen));
+        g.fill(new Ellipse2D.Double(centerXOnScreen - radiusOnScreen, centerYOnScreen - radiusOnScreen,
+                diameterOnScreen, diameterOnScreen));
     }
 
     @Override
@@ -62,6 +77,10 @@ public class Player extends Creature implements KeyListener {
         //ignore
     }
 
+    /**
+     * on WASD or arrow key pressed, change preferredDirection accordingly
+     * @param e the key pressed to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {

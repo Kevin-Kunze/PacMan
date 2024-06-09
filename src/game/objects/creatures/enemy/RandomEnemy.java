@@ -7,7 +7,10 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
-public class RandomEnemy extends Enemy{
+/**
+ * chases random position
+ */
+public class RandomEnemy extends Enemy {
     private final Random random;
 
     public RandomEnemy(Game game, Player player, double centerX, double centerY, double radius, double speed, Color color) {
@@ -15,13 +18,16 @@ public class RandomEnemy extends Enemy{
         random = new Random();
     }
 
+    /**
+     * get random position, that is free
+     */
     @Override
     protected void tickTarget() {
         if ((int) centerX == targetX && (int) centerY == targetY) {
             int nextTargetX = random.nextInt(game.getGameMap().getWidth());
             int nextTargetY = random.nextInt(game.getGameMap().getHeight());
 
-            if(!(game.getGameMap().isFree(nextTargetX, nextTargetY))) {
+            if (!(game.getGameMap().isFree(nextTargetX, nextTargetY))) {
                 return;
             }
 

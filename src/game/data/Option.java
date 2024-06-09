@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class Option {
+    //colors for game
     public static final Color PLAYER_COLOR = Color.YELLOW;
     public static final Color[] ENEMY_COLOR = { Color.RED, Color.ORANGE, Color.GREEN};
     public static final Color BLOCK_COLOR = Color.BLUE;
@@ -11,12 +12,11 @@ public class Option {
     public static final Color BACKGROUND_COLOR = Color.BLACK;
     public static final Color WON_COLOR = Color.GREEN;
     public static final Color LOST_COLOR = Color.RED;
-    public static final int TILE_SIZE = 32;
-    public static final double GAME_SPEED = 0.07;
 
-    public static final int MAX_SCORE_LIST = 12;
+    public static final int TILE_SIZE = 32; //calculates how big the window is
+    public static final double GAME_SPEED = 0.07; //how fast the Creatures move
 
-    public static final String FILE_PATH = "scoreList.json";
+    public static final String SCORE_LIST_JSON = "scoreList.json"; //where scoreList
 
     @Override
     public String toString() {
@@ -30,8 +30,7 @@ public class Option {
                 ", LOST_COLOR=" + LOST_COLOR +
                 ", TILE_SIZE=" + TILE_SIZE +
                 ", GAME_SPEED=" + GAME_SPEED +
-                ", MAX_SCORE_LIST=" + MAX_SCORE_LIST +
-                ", FILE_PATH='" + FILE_PATH + '\'' +
+                ", FILE_PATH='" + SCORE_LIST_JSON + '\'' +
                 '}';
     }
 }

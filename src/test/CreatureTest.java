@@ -23,7 +23,7 @@ class CreatureTest {
             }
 
             @Override
-            public void render(Graphics2D g, int tileSize) {
+            public void render(Graphics2D g) {
 
             }
         };

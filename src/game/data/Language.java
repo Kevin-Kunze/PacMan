@@ -3,8 +3,10 @@ package game.data;
 import java.util.Arrays;
 
 public class Language {
+    //count of available languages
     public static final int COUNT = 2;
 
+    //arrays for storing multiple languages
     private static final String title = "PacMan";
     private static final String[] error = new String[]{"Error!", "Fehler!"};
     private static final String[] languageName = new String[]{"English", "Deutsch"};
@@ -18,12 +20,15 @@ public class Language {
     private static final String[] clearScoreList = new String[]{"Clear Scoreboard", "Rangliste löschen"};
     private static final String[] invalidPlayerName = new String[]{"Player name is invalid.", "Spielername ist ungültig."};
 
+
+    //getter for attributes according to language
     public static String getError(int language) {
         if (language < 0 || language >= COUNT) return error[0];
         return error[language];
     }
 
     public static String getLanguageName(int language) {
+        //return next language
         if (language < 0 || language >= COUNT) return languageName[0];
         if(++language >= COUNT) language = 0;
         return languageName[language];

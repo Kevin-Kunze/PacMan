@@ -1,6 +1,7 @@
 package game.objects.creatures.enemy;
 
 import game.Game;
+import game.data.Option;
 import game.objects.creatures.Creature;
 import game.objects.creatures.Player;
 
@@ -8,6 +9,10 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
 
+/**
+ * opponent for the player,
+ * chases some position
+ */
 public abstract class Enemy extends Creature {
     protected final Player player;
     protected int targetX;
@@ -20,6 +25,9 @@ public abstract class Enemy extends Creature {
         targetY = (int) centerY;
     }
 
+    /**
+     * calculate direction best for target position
+     */
     @Override
     public void tickPreferredDirection() {
         tickTarget();
@@ -31,6 +39,12 @@ public abstract class Enemy extends Creature {
         }
     }
 
+    /**
+     * implementation of A* algorithm
+     * @param goalX target position x
+     * @param goalY target position y
+     * @return next step for enemy
+     */
     private Node shortestDirectionTo(int goalX, int goalY) {
         Node startNode = new Node((int) centerX, (int) centerY, null, 0, goalX, goalY);
 
@@ -42,7 +56,7 @@ public abstract class Enemy extends Creature {
         Node currentNode;
         while ((currentNode = queue.poll()) != null) {
             if(visited.contains(currentNode)) continue;
-            if(currentNode.getX() == goalX && currentNode.getY() == goalY) return currentNode.initialDirection();
+            if(currentNode.isSamePosition(goalX, goalY)) return currentNode.initialDirection();
 
             visited.add(currentNode);
             queue.addAll(currentNode.neighbors(game.getGameMap(), goalX, goalY));
@@ -51,14 +65,24 @@ public abstract class Enemy extends Creature {
         return null;
     }
 
+    /**
+     * get target position
+     */
     protected abstract void tickTarget();
 
+    /**
+     * calculations on tick
+     */
     @Override
     public void tick() {
         super.tick();
         tickPlayerCollision();
     }
 
+    /**
+     * checks if creature collides with player
+     * (is calculated as if both objects are rendered as circles)
+     */
     private void tickPlayerCollision() {
         double dx = player.getCenterX() - centerX;
         double dy = player.getCenterY() - centerY;
@@ -69,11 +93,15 @@ public abstract class Enemy extends Creature {
         }
     }
 
+    /**
+     * render square with set color
+     * @param g the Graphics context in which to render
+     */
     @Override
-    public void render(Graphics2D g, int tileSize) {
-        double centerXOnScreen = centerX * tileSize;
-        double centerYOnScreen = centerY * tileSize;
-        double radiusOnScreen = radius * tileSize;
+    public void render(Graphics2D g) {
+        double centerXOnScreen = centerX * Option.TILE_SIZE;
+        double centerYOnScreen = centerY * Option.TILE_SIZE;
+        double radiusOnScreen = radius * Option.TILE_SIZE;
         double sizeOnScreen = radiusOnScreen * 2.0;
 
         g.setColor(color);

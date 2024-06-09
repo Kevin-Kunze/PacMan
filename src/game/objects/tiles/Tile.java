@@ -4,10 +4,15 @@ import game.objects.GameObject;
 
 import java.util.Objects;
 
+
 public abstract class Tile extends GameObject {
     protected final int x;
     protected final int y;
 
+    /**
+     * @param x position x
+     * @param y position y
+     */
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;

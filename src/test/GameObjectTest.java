@@ -11,7 +11,7 @@ class GameObjectTest {
     void testToString() {
         GameObject gameObject = new GameObject() {
             @Override
-            public void render(Graphics2D g, int tileSize) {
+            public void render(Graphics2D g) {
 
             }
         };

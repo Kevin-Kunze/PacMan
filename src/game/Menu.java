@@ -18,6 +18,7 @@ import java.util.Objects;
 
 public class Menu extends JFrame {
     private final Game game;
+    Gson gson; //read, load JSON files
     private JButton buttonStartGame;
     private JPanel display;
     private JLabel labelTitle;
@@ -26,34 +27,48 @@ public class Menu extends JFrame {
     private JTextField textFieldName;
     private JButton buttonClearScoreList;
     private JLabel labelScoreTime;
-    private ScoreList scoreList;
-    private int language;
-    private boolean againScreen;
-    private boolean won;
+    private ScoreList scoreList; //scoreList on runtime
+    private int language; //which language is displayed
+    private boolean againScreen; //if menu is displayed after game is finished
+    private boolean won; //if finished game was won
 
+    /**
+     * @param game   JFrame, where game is played
+     * @param width  width of window
+     * @param height height of window
+     */
     public Menu(Game game, int width, int height) {
+        //initialize JFrame
         super(Language.getTitle());
+
         this.game = game;
+        language = 0; //DEFAULT value
+        againScreen = false; //as it isn't opened
 
-        language = 0;
-        againScreen = false;
-
+        //set labelTitle
         Font fontTitle = new Font("Title", Font.BOLD, 30);
         labelTitle.setText(Language.getTitle());
         labelTitle.setFont(fontTitle);
+
+        //add action listener
         buttonStartGame.addActionListener(_ -> startGame());
         buttonLanguage.addActionListener(_ -> switchLanguage());
         buttonClearScoreList.addActionListener(_ -> clearScoreList());
 
+        //initialize gson
+        gson = new GsonBuilder().setPrettyPrinting().create();
+
         loadScoreList();
         setText();
 
+        //set JFrame attributes
         setSize(width, height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().add(display);
 
+        //add window listener (when closing)
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -62,24 +77,32 @@ public class Menu extends JFrame {
             }
         });
 
+        //show menu
         activate();
     }
 
+    /**
+     * load scoreList from JSON File
+     */
     public void loadScoreList() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
-            JsonReader jsonReader = new JsonReader(new FileReader(Option.FILE_PATH));
+            JsonReader jsonReader = new JsonReader(new FileReader(Option.SCORE_LIST_JSON));
             scoreList = gson.fromJson(jsonReader, ScoreList.class);
         } catch (FileNotFoundException e) {
+            //initialize scoreList empty, if no file is found
             scoreList = new ScoreList();
         }
     }
 
+    /**
+     * save scoreList to JSON File
+     */
     public void saveScoreList() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
-            FileWriter fileWriter = new FileWriter(Option.FILE_PATH);
+            FileWriter fileWriter = new FileWriter(Option.SCORE_LIST_JSON);
             gson.toJson(scoreList, fileWriter);
+
+            //write file
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
@@ -88,33 +111,57 @@ public class Menu extends JFrame {
         }
     }
 
+    /**
+     * delete all elements from scoreList
+     */
     private void clearScoreList() {
         scoreList.clear();
-        setLabelScoreList();
+        setLabelScoreList(); //presumably to empty string
     }
 
+    /**
+     * check if player name is valid,
+     * hide this window,
+     * start game loop
+     */
     private void startGame() {
-        if(textFieldName.getText().isEmpty()
+        //checks if player name is empty, if some common html symbols are in the player name, if the length is valid
+        if (textFieldName.getText().isEmpty()
                 || textFieldName.getText().contains("\"")
                 || textFieldName.getText().contains("<")
-                || textFieldName.getText().contains(">")) {
+                || textFieldName.getText().contains(">")
+                || textFieldName.getText().length() > 12) {
             JOptionPane.showMessageDialog(this, Language.getError(language) + "\n"
                     + Language.getInvalidPlayerName(language));
             return;
         }
-        setVisible(false);
+
+        //close menu, start game
         game.startGameLoop();
+        setVisible(false);
     }
 
+    /**
+     * add to scoreList,
+     * update UI
+     *
+     * @param won if game was won
+     */
     public void open(boolean won) {
         this.won = won;
-        againScreen = true;
-        scoreList.add(textFieldName.getText(), game.getGameMap().getScore(), game.getTime());
+        againScreen = true; //as menu is opened another time
+        scoreList.add(textFieldName.getText(), game.getGameMap().getScore(), game.getTime()); //add to scoreList
+
+        //update UI
         setPlayAgainText();
         setLabelScoreList();
-        activate();
+
+        activate(); //make menu visible
     }
 
+    /**
+     * update static UI
+     */
     private void setText() {
         buttonLanguage.setText(Language.getLanguageName(language));
         buttonStartGame.setText(Language.getPlay(language));
@@ -122,7 +169,12 @@ public class Menu extends JFrame {
         setLabelScoreList();
     }
 
+    /**
+     * update dynamic UI,
+     * should only be called, when a game is finished
+     */
     private void setPlayAgainText() {
+        //set text according to won state
         if (won) {
             labelTitle.setText(Language.getWon(language));
             labelTitle.setForeground(Option.WON_COLOR);
@@ -130,11 +182,15 @@ public class Menu extends JFrame {
             labelTitle.setText(Language.getLost(language));
             labelTitle.setForeground(Option.LOST_COLOR);
         }
+
         labelScoreTime.setText(Language.getScore(language) + ": " + game.getGameMap().getScore() + " "
                 + Language.getTime(language) + ": " + game.getTime());
         buttonStartGame.setText(Language.getPlayAgain(language));
     }
 
+    /**
+     * set labelScoreList to content of scoreList in HTML format
+     */
     private void setLabelScoreList() {
         if (scoreList.isEmpty()) {
             labelScoreList.setText("");
@@ -144,12 +200,19 @@ public class Menu extends JFrame {
                 Language.getTime(language)));
     }
 
+    /**
+     * make visible,
+     * (possible to add other functionality)
+     */
     private void activate() {
         setVisible(true);
     }
 
+    /**
+     * change Language
+     */
     private void switchLanguage() {
-        if (++language >= Language.COUNT) language = 0;
+        if (++language >= Language.COUNT) language = 0; //increment language in circle
         setText();
         if (againScreen) setPlayAgainText();
     }

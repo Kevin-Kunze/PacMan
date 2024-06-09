@@ -5,12 +5,18 @@ import game.objects.creatures.Player;
 
 import java.awt.*;
 
+/**
+ * chases the player according to his next position
+ */
 public class CuttingEnemy extends Enemy {
 
     public CuttingEnemy(Game game, Player player, double centerX, double centerY, double radius, double speed, Color color) {
         super(game, player, centerX, centerY, radius, speed, color);
     }
 
+    /**
+     * get position where the player might be in the future
+     */
     @Override
     protected void tickTarget() {
         targetX = (int) player.getCenterX();

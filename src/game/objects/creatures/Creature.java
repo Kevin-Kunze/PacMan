@@ -7,7 +7,24 @@ import game.objects.GameObject;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * mobile game object,
+ * player or enemy
+ */
 public abstract class Creature extends GameObject {
+    protected final Game game;
+    protected final double radius;
+    protected final double speed;
+    protected final Color color;
+    private final double initialX;
+    private final double initialY;
+    protected double centerX;
+    protected double centerY;
+    protected int preferredDirectionX;
+    protected int preferredDirectionY;
+    protected int movingDirectionX;
+    protected int movingDirectionY;
+
     public Creature(Game game, double centerX, double centerY, double radius, double speed, Color color) {
         this.game = game;
         this.centerX = centerX;
@@ -20,21 +37,9 @@ public abstract class Creature extends GameObject {
         initialY = centerY;
     }
 
-    protected final Game game;
-    protected double centerX;
-    protected double centerY;
-    protected final double radius;
-    protected final double speed;
-    protected final Color color;
-
-    protected int preferredDirectionX;
-    protected int preferredDirectionY;
-    protected int movingDirectionX;
-    protected int movingDirectionY;
-
-    private final double initialX;
-    private final double initialY;
-
+    /**
+     * reset creature to initial attributes
+     */
     public void reset() {
         centerX = initialX;
         centerY = initialY;
@@ -45,6 +50,9 @@ public abstract class Creature extends GameObject {
         movingDirectionY = 0;
     }
 
+    /**
+     * calculations on tick
+     */
     public void tick() {
         tickMovingDirection();
 
@@ -57,6 +65,7 @@ public abstract class Creature extends GameObject {
         centerX = newX;
         centerY = newY;
 
+        // when creature has crossed center (or is near center) make additional calculations
         if (crossedCenterX || crossedCenterY) {
             tickPreferredDirection();
             tickTurn(crossedCenterX, crossedCenterY);
@@ -65,6 +74,9 @@ public abstract class Creature extends GameObject {
         tickWallCollisions();
     }
 
+    /**
+     * set movingDirection according to preferred direction
+     */
     private void tickMovingDirection() {
         if (movingDirectionX == 0 && movingDirectionY == 0) {
             movingDirectionX = preferredDirectionX;
@@ -77,8 +89,16 @@ public abstract class Creature extends GameObject {
 
     }
 
+    /**
+     * calculated direction according to player for enemies
+     */
     protected abstract void tickPreferredDirection();
 
+    /**
+     * turn in preferredDirection by setting movingDirection
+     * @param crossedCenterX if on position x center was crossed
+     * @param crossedCenterY if on position y center was crossed
+     */
     private void tickTurn(boolean crossedCenterX, boolean crossedCenterY) {
         boolean turnXtoY = crossedCenterX && movingDirectionX != 0 && preferredDirectionY != 0
                 && game.getGameMap().isFree((int) centerX, (int) (centerY + preferredDirectionY));
@@ -94,6 +114,9 @@ public abstract class Creature extends GameObject {
         }
     }
 
+    /**
+     * if stuck on wall, snap to position and set movingDirection to 0
+     */
     private void tickWallCollisions() {
         GameMap gameMap = game.getGameMap();
 
@@ -107,10 +130,19 @@ public abstract class Creature extends GameObject {
         }
     }
 
+    /**
+     * snap centerX,
+     * set movingDirectionX to 0
+     */
     private void snapX() {
         centerX = (int) centerX + 0.5;
         movingDirectionX = 0;
     }
+
+    /**
+     * snap centerY,
+     * set movingDirectionY to 0
+     */
     private void snapY() {
         centerY = (int) centerY + 0.5;
         movingDirectionY = 0;

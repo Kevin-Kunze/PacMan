@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class GameMap extends GameObject {
+    //default map, where game map get loaded from
     private static final int[][] DEFAULT_MAP = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1},
@@ -32,7 +33,10 @@ public class GameMap extends GameObject {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
+    //game map at run time
     private final Tile[][] tiles;
+
+    //used for registering end of game and calculating score
     private int initialDotCount;
     private int dotCount;
 
@@ -41,6 +45,9 @@ public class GameMap extends GameObject {
         reset();
     }
 
+    /**
+     * set dotCount and initialDotCount to Dots on tiles
+     */
     private void countDots() {
         int sum = 0;
         for (Tile[] row : tiles) {
@@ -52,6 +59,9 @@ public class GameMap extends GameObject {
         dotCount = sum;
     }
 
+    /**
+     * set attributes as they were before
+     */
     public void reset() {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
@@ -66,14 +76,19 @@ public class GameMap extends GameObject {
     }
 
     @Override
-    public void render(Graphics2D g, int tileSize) {
+    public void render(Graphics2D g) {
         for (Tile[] row : tiles) {
             for (Tile tile : row) {
-                tile.render(g, tileSize);
+                tile.render(g);
             }
         }
     }
 
+    /**
+     * @param x position x
+     * @param y position y
+     * @return is instance in game map a Dot or Air
+     */
     public boolean isFree(int x, int y) {
         if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) return false;
         return !(tiles[y][x] instanceof Block);
@@ -91,6 +106,11 @@ public class GameMap extends GameObject {
         return tiles[y][x];
     }
 
+    /**
+     * remove Dot at position
+     * @param x position x
+     * @param y position y
+     */
     public void removeDot(int x, int y) {
         if (tiles[y][x] instanceof Dot) {
             tiles[y][x] = new Air(x, y);
@@ -102,6 +122,9 @@ public class GameMap extends GameObject {
         return dotCount;
     }
 
+    /**
+     * @return calculated score
+     */
     public int getScore() {
         return initialDotCount - dotCount;
     }

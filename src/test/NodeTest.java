@@ -36,7 +36,7 @@ class NodeTest {
     }
 
     @Test
-    void compareTo() {
+    void isSamePositionTo() {
         int expectedValue = 0;
         int actualValue = node.compareTo(new Node(6, 5, node, 1, 13, 13));
         Assertions.assertEquals(expectedValue, actualValue);
@@ -53,6 +53,13 @@ class NodeTest {
     void getY() {
         int expectedValue = 5;
         int actualValue = node.getY();
+        Assertions.assertEquals(expectedValue, actualValue);
+    }
+
+    @Test
+    void testIsSamePosition() {
+        boolean expectedValue = true;
+        boolean actualValue = node.isSamePosition(5, 5);
         Assertions.assertEquals(expectedValue, actualValue);
     }
 

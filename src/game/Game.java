@@ -24,15 +24,14 @@ public class Game extends JFrame {
     private final Enemy[] enemies;
     private Timer timer;
     private ScheduledFuture<?> gameThread;
-    private final int tileSize;
     private int time;
     private boolean won;
 
     public Game() {
-        super("PacMan");
+        //initialize JFrame
+        super(Language.getTitle());
 
-        tileSize = Option.TILE_SIZE;
-
+        //initialize objects
         display = new Display(this);
         player = new Player(this, 13.5, 10.5, 0.375, Option.GAME_SPEED);
         gameMap = new GameMap();
@@ -42,15 +41,20 @@ public class Game extends JFrame {
                 new RandomEnemy(this, player, 14.5, 8.5, 0.375, Option.GAME_SPEED * 0.85, Option.ENEMY_COLOR[2])
         };
 
-        int width = gameMap.getWidth() * (tileSize + 1) - 10;
-        int height = gameMap.getHeight() * (tileSize + 1) + 14;
+        //calculate width and height
+        int width = gameMap.getWidth() * (Option.TILE_SIZE + 1) - 10;
+        int height = gameMap.getHeight() * (Option.TILE_SIZE + 1) + 14;
+
+        //initialize menu
         menu = new Menu(this, width, height);
 
+        //set JFrame attributess
         setSize(width, height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        //add window listener (when closing)
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -64,6 +68,9 @@ public class Game extends JFrame {
         new Game();
     }
 
+    /**
+     * when game is finished, reset all attributes to before
+     */
     private void reset() {
         won = false;
         gameMap.reset();
@@ -73,19 +80,25 @@ public class Game extends JFrame {
         }
     }
 
+    /**
+     * ready attributes for game start
+     */
     public void startGameLoop() {
         reset();
-        setVisible(true);
-        addKeyListener(player);
-
+        addKeyListener(player); //activate control
         startTime();
 
+        setVisible(true);
+
         gameThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            tick();
-            display.repaint();
+            tick(); //tick calculations
+            display.repaint(); //render
         }, 0L, 1000L / 60L, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * start time with delay of 1s
+     */
     private void startTime() {
         time = 0;
         TimerTask timerTask = new TimerTask() {
@@ -104,8 +117,13 @@ public class Game extends JFrame {
 
     public void loose() {
         wrapGame();
+        //possibility to add further functionality
     }
 
+    /**
+     * calculate paths,
+     * check if game has ended
+     */
     private void tick() {
         if (won) wrapGame();
         if (time >= 999) loose();
@@ -115,32 +133,43 @@ public class Game extends JFrame {
         }
     }
 
+    /**
+     * ready game for opening menu,
+     * open menu
+     */
     private void wrapGame() {
-        menu.open(won);
-        setVisible(false);
         removeKeyListener(player);
         timer.cancel();
         gameThread.cancel(true);
+        menu.open(won);
+        setVisible(false);
     }
 
+    /**
+     * render all objects
+     * @param g the graphics content in which to paint
+     */
     public void render(Graphics2D g) {
+        //render objects
         g.setColor(Option.BACKGROUND_COLOR);
         g.fillRect(0, 0, getWidth(), getHeight());
-        gameMap.render(g, tileSize);
-        player.render(g, tileSize);
+        gameMap.render(g);
+        player.render(g);
         for (Enemy enemy : enemies) {
-            enemy.render(g, tileSize);
+            enemy.render(g);
         }
 
-        //set font and color
-        g.setFont(new Font("DisplayFont", Font.BOLD, (int) (tileSize / 1.5)));
+        //set font and color for score and time
+        g.setFont(new Font("DisplayFont", Font.BOLD, (int) (Option.TILE_SIZE / 1.5)));
         g.setColor(Color.WHITE);
 
         //display score
-        g.drawString(Language.getScore(menu.getLanguage()) + ": " + gameMap.getScore(), tileSize / 5, tileSize / 3 + 14);
+        g.drawString(Language.getScore(menu.getLanguage()) + ": " + gameMap.getScore(), Option.TILE_SIZE / 5,
+                Option.TILE_SIZE / 3 + 14);
 
         //display time
-        g.drawString(Language.getTime(menu.getLanguage()) + ": " + time, tileSize * (gameMap.getWidth() - 3) - 10, tileSize / 3 + 14);
+        g.drawString(Language.getTime(menu.getLanguage()) + ": " + time,
+                Option.TILE_SIZE * (gameMap.getWidth() - 3) - 10, Option.TILE_SIZE / 3 + 14);
 
     }
 
@@ -165,7 +194,7 @@ public class Game extends JFrame {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Game game = (Game) object;
-        return tileSize == game.tileSize && time == game.time && won == game.won
+        return time == game.time && won == game.won
                 && Objects.equals(display, game.display) && Objects.equals(gameMap, game.gameMap)
                 && Objects.equals(player, game.player) && Objects.equals(menu, game.menu)
                 && Objects.deepEquals(enemies, game.enemies) && Objects.equals(timer, game.timer)
@@ -174,7 +203,7 @@ public class Game extends JFrame {
 
     @Override
     public int hashCode() {
-        return Objects.hash(display, gameMap, player, menu, Arrays.hashCode(enemies), timer, gameThread, tileSize, time, won);
+        return Objects.hash(display, gameMap, player, menu, Arrays.hashCode(enemies), timer, gameThread, time, won);
     }
 
     @Override
@@ -186,7 +215,6 @@ public class Game extends JFrame {
                 ", enemies=" + Arrays.toString(enemies) +
                 ", timer=" + timer +
                 ", gameThread=" + gameThread +
-                ", tileSize=" + tileSize +
                 ", time=" + time +
                 ", won=" + won +
                 '}';

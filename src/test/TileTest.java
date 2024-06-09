@@ -11,7 +11,7 @@ class TileTest {
     void testToString() {
         Tile tile = new Tile(0, 0) {
             @Override
-            public void render(Graphics2D g, int tileSize) {
+            public void render(Graphics2D g) {
 
             }
         };

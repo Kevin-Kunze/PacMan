@@ -3,6 +3,9 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * used to render game
+ */
 public class Display extends JPanel {
     private final Game game;
 
@@ -12,6 +15,10 @@ public class Display extends JPanel {
         game.add(this);
     }
 
+    /**
+     * render game
+     * @param g  the <code>Graphics</code> context in which to paint
+     */
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
