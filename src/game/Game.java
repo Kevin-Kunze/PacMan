@@ -26,6 +26,7 @@ public class Game extends JFrame {
     private ScheduledFuture<?> gameThread;
     private int time;
     private boolean won;
+    private boolean gameEnded;
 
     public Game() {
         //initialize JFrame
@@ -73,6 +74,7 @@ public class Game extends JFrame {
      */
     private void reset() {
         won = false;
+        gameEnded = false;
         gameMap.reset();
         player.reset();
         for (Enemy enemy: enemies) {
@@ -129,7 +131,7 @@ public class Game extends JFrame {
         if (time >= 999) loose();
         player.tick();
         for(Enemy enemy : enemies) {
-            enemy.tick();
+            if(!gameEnded) enemy.tick();
         }
     }
 
@@ -138,6 +140,7 @@ public class Game extends JFrame {
      * open menu
      */
     private void wrapGame() {
+        gameEnded = true;
         removeKeyListener(player);
         timer.cancel();
         gameThread.cancel(true);
